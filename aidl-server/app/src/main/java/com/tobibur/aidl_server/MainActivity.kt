@@ -1,5 +1,6 @@
 package com.tobibur.aidl_server
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -25,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tobibur.aidl_server.data.MenuRepository
 import com.tobibur.aidl_server.domain.model.MenuItem
+import com.tobibur.aidl_server.service.MenuService
 import com.tobibur.aidl_server.ui.screens.MainMenu
 import com.tobibur.aidl_server.ui.screens.MainMenuViewModel
 import com.tobibur.aidl_server.ui.theme.AIDLserverTheme
@@ -94,6 +96,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        val intent = Intent(this, MenuService::class.java)
+        startService(intent)
     }
 }
 
