@@ -4,12 +4,22 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.os.RemoteCallbackList
+import android.util.Log
 import com.tobibur.aidl_server.aidl.IMenuCallback
 import com.tobibur.aidl_server.aidl.IMenuService
 
 class MenuService : Service() {
 
     private val listeners = RemoteCallbackList<IMenuCallback>()
+
+    companion object {
+        private const val TAG = "MenuService"
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d(TAG, "onStartCommand: started")
+        return super.onStartCommand(intent, flags, startId)
+    }
 
     private val binder = object : IMenuService.Stub() {
         override fun selectMenuItem(itemId: Int) {
@@ -30,5 +40,8 @@ class MenuService : Service() {
         }
     }
 
-    override fun onBind(intent: Intent?): IBinder = binder
+    override fun onBind(intent: Intent?): IBinder {
+        Log.d(TAG, "onBind called")
+        return binder
+    }
 }

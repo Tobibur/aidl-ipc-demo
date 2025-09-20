@@ -26,11 +26,7 @@
 
         <service
             android:name=".service.MenuService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.yourpackage.ACTION_BIND_MENU_SERVICE" />
-            </intent-filter>
-        </service>
+            android:exported="true"/>
 
     </application>
 

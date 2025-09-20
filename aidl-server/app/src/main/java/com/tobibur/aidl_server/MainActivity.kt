@@ -2,6 +2,7 @@ package com.tobibur.aidl_server
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -99,6 +100,22 @@ class MainActivity : ComponentActivity() {
 
         val intent = Intent(this, MenuService::class.java)
         startService(intent)
+        bindService(intent, object : android.content.ServiceConnection {
+            override fun onServiceConnected(
+                name: android.content.ComponentName?,
+                service: android.os.IBinder?
+            ) {
+                Log.d(TAG, "onServiceConnected: connected")
+            }
+
+            override fun onServiceDisconnected(name: android.content.ComponentName?) {
+                Log.d(TAG, "onServiceDisconnected: disconnected")
+            }
+        }, BIND_AUTO_CREATE)
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }
 

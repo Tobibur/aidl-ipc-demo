@@ -1,6 +1,13 @@
 package com.tobibur.aidl_client
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
+import android.os.RemoteException
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -23,16 +30,23 @@ import com.tobibur.aidl_client.domain.model.MenuItem
 import com.tobibur.aidl_client.ui.screens.MainMenuScreen
 import com.tobibur.aidl_client.ui.screens.MainMenuViewModel
 import com.tobibur.aidl_client.ui.theme.AIDLclientTheme
+import com.tobibur.aidl_server.aidl.IMenuCallback
+import com.tobibur.aidl_server.aidl.IMenuService
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity : ComponentActivity() {
 
     private val mainMenuViewModel: MainMenuViewModel by viewModels()
 
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        Log.d(TAG, "onCreate: Starting client. Loading..")
         setContent {
             AIDLclientTheme {
                 Scaffold(
@@ -64,8 +78,55 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        val intent = Intent()
+        intent.setPackage("com.tobibur.aidl_server")
+        val bound = bindService(intent, mConnection, BIND_AUTO_CREATE)
+        Log.d(TAG, "Bind result = $bound")
+
+    }
+
+
+    var iRemoteService: IMenuService? = null
+
+    val mConnection = object : ServiceConnection {
+
+        // Called when the connection with the service is established.
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            // Following the preceding example for an AIDL interface,
+            // this gets an instance of the IRemoteInterface, which we can use to call on the service.
+            iRemoteService = IMenuService.Stub.asInterface(service)
+            Log.e(TAG, "Service connected")
+            Toast.makeText(this@MainActivity, "Service connected", Toast.LENGTH_SHORT).show()
+            try {
+                iRemoteService?.registerListener(menuUpdateCallback)
+            } catch (e: RemoteException) {
+                e.printStackTrace()
+            }
+        }
+
+        // Called when the connection with the service disconnects unexpectedly.
+        override fun onServiceDisconnected(className: ComponentName) {
+            Log.e(TAG, "Service has unexpectedly disconnected")
+            Toast.makeText(
+                this@MainActivity,
+                "Service has unexpectedly disconnected",
+                Toast.LENGTH_SHORT
+            ).show()
+            iRemoteService = null
+        }
+    }
+
+    private val menuUpdateCallback = object : IMenuCallback.Stub() {
+        override fun onMenuItemSelected(itemId: Int) {
+
+            Log.d(TAG, "onMenuItemSelected: Item selected with ID: $itemId")
+            // You can handle the menu item selection here if needed
+        }
+
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
