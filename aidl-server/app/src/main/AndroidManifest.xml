@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <permission
+        android:name="com.tobibur.aidl_server.MENU_SERVICE"
+        android:protectionLevel="normal" />
+
     <application
         android:name=".AidlServerApplication"
         android:allowBackup="true"
@@ -26,7 +30,13 @@
 
         <service
             android:name=".service.MenuService"
-            android:exported="true"/>
+            android:exported="true"
+            android:enabled="true"
+            android:permission="com.tobibur.aidl_server.MENU_SERVICE">
+            <intent-filter>
+                <action android:name="com.tobibur.aidl_server.IMenuService" />
+            </intent-filter>
+        </service>
 
     </application>
 

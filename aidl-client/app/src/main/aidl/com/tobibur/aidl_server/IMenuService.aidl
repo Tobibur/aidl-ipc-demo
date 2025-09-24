@@ -1,6 +1,6 @@
-package com.tobibur.aidl_server.aidl;
+package com.tobibur.aidl_server;
 
-import com.tobibur.aidl_server.aidl.IMenuCallback;
+import com.tobibur.aidl_server.IMenuCallback;
 
 interface IMenuService {
     void selectMenuItem(int itemId);

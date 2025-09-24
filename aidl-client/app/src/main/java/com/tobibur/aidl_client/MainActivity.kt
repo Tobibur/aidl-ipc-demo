@@ -30,8 +30,8 @@ import com.tobibur.aidl_client.domain.model.MenuItem
 import com.tobibur.aidl_client.ui.screens.MainMenuScreen
 import com.tobibur.aidl_client.ui.screens.MainMenuViewModel
 import com.tobibur.aidl_client.ui.theme.AIDLclientTheme
-import com.tobibur.aidl_server.aidl.IMenuCallback
-import com.tobibur.aidl_server.aidl.IMenuService
+import com.tobibur.aidl_server.IMenuCallback
+import com.tobibur.aidl_server.IMenuService
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity : ComponentActivity() {
@@ -47,6 +47,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         Log.d(TAG, "onCreate: Starting client. Loading..")
+
+        val intent = Intent("com.tobibur.aidl_server.IMenuService")
+        intent.setPackage("com.tobibur.aidl_server")
+        val bound = bindService(intent, mConnection, BIND_AUTO_CREATE)
+        Log.d(TAG, "Bind result = $bound")
+
         setContent {
             AIDLclientTheme {
                 Scaffold(
@@ -78,12 +84,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-        val intent = Intent()
-        intent.setPackage("com.tobibur.aidl_server")
-        val bound = bindService(intent, mConnection, BIND_AUTO_CREATE)
-        Log.d(TAG, "Bind result = $bound")
-
     }
 
 

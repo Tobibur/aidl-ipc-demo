@@ -1,4 +1,4 @@
-package com.tobibur.aidl_server.aidl;
+package com.tobibur.aidl_server;
 
 interface IMenuCallback {
     void onMenuItemSelected(int itemId);

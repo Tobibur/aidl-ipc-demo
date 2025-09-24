@@ -5,9 +5,8 @@ import android.content.Intent
 import android.os.IBinder
 import android.os.RemoteCallbackList
 import android.util.Log
-import com.tobibur.aidl_server.aidl.IMenuCallback
-import com.tobibur.aidl_server.aidl.IMenuService
-
+import com.tobibur.aidl_server.IMenuCallback
+import com.tobibur.aidl_server.IMenuService
 class MenuService : Service() {
 
     private val listeners = RemoteCallbackList<IMenuCallback>()
