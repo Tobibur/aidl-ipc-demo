@@ -6,12 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainMenuViewModel : ViewModel() {
 
-    private val _menuItemsState = listOf(
-        MenuItem(1, "Menu Item 1", false),
-        MenuItem(2, "Menu Item 2", true),
-        MenuItem(3, "Menu Item 3", false)
-    )
-    val menuItemsFlow: MutableStateFlow<List<MenuItem>> = MutableStateFlow(_menuItemsState)
+    val menuItemsFlow: MutableStateFlow<List<MenuItem>> = MutableStateFlow(emptyList())
 
 
     fun insertMenuItem(menuItem: MenuItem) {
@@ -19,8 +14,10 @@ class MainMenuViewModel : ViewModel() {
         val index = currentList.indexOfFirst { it.id == menuItem.id }
         if (index != -1) {
             currentList[index] = menuItem
-            menuItemsFlow.value = currentList
+        } else {
+            currentList.add(menuItem)
         }
+        menuItemsFlow.value = currentList
     }
 
     fun deleteMenuItem(menuItem: MenuItem) {

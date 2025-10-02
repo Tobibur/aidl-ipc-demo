@@ -76,6 +76,17 @@ class MainActivity : ComponentActivity() {
                         onCheckedChange = { menuItem ->
                             // Handle item click if needed
                             mainMenuViewModel.insertMenuItem(menuItem)
+                            try {
+                                iRemoteService?.selectMenuItem(
+                                    com.tobibur.aidl_server.domain.model.MenuItem(
+                                        menuItem.id,
+                                        menuItem.title,
+                                        menuItem.isChecked
+                                    )
+                                )
+                            } catch (e: RemoteException) {
+                                e.printStackTrace()
+                            }
                         },
                         onDelete = { menuItem ->
                             mainMenuViewModel.deleteMenuItem(menuItem)
@@ -118,10 +129,12 @@ class MainActivity : ComponentActivity() {
     }
 
     private val menuUpdateCallback = object : IMenuCallback.Stub() {
-        override fun onMenuItemSelected(itemId: Int) {
-
-            Log.d(TAG, "onMenuItemSelected: Item selected with ID: $itemId")
-            // You can handle the menu item selection here if needed
+        override fun onMenuItemSelected(menuItems: List<com.tobibur.aidl_server.domain.model.MenuItem?>?) {
+            Log.d(TAG, "onMenuItemSelected: called from service ${menuItems?.size}")
+            menuItems?.forEach {
+                mainMenuViewModel.insertMenuItem(MenuItem(it!!.id, it.title, it.isChecked))
+                Log.d(TAG, "onMenuItemSelected: $it")
+            }
         }
 
     }

@@ -16,6 +16,9 @@ interface MenuItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMenuItem(entry: MenuItem)
 
+    @Query("SELECT * FROM menu_items WHERE id = :id")
+    suspend fun getMenuItemById(id: Int): MenuItem?
+
     @Delete
     suspend fun deleteMenuItem(entry: MenuItem)
 }

@@ -3,7 +3,7 @@ package com.tobibur.aidl_server.ui.screens
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tobibur.aidl_server.domain.model.MenuItem
-import com.tobibur.aidl_server.domain.usecase.AddMenuItemUseCase
+import com.tobibur.aidl_server.domain.usecase.UpdateMenuItemUseCase
 import com.tobibur.aidl_server.domain.usecase.DeleteMenuItemUseCase
 import com.tobibur.aidl_server.domain.usecase.GetMenuItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,8 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainMenuViewModel @Inject constructor(
-    private val getMenuItemsUseCase: GetMenuItemsUseCase,
-    private val addMenuItemUseCase: AddMenuItemUseCase,
+    getMenuItemsUseCase: GetMenuItemsUseCase,
+    private val updateMenuItemUseCase: UpdateMenuItemUseCase,
     private val deleteMenuItemUseCase: DeleteMenuItemUseCase
 ) : ViewModel() {
 
@@ -25,7 +25,7 @@ class MainMenuViewModel @Inject constructor(
 
     fun insertMenuItem(menuItem: MenuItem) {
         viewModelScope.launch {
-            addMenuItemUseCase(menuItem)
+            updateMenuItemUseCase(menuItem)
         }
     }
 

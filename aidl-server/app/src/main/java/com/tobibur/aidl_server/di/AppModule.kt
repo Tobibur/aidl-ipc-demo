@@ -6,8 +6,9 @@ import com.tobibur.aidl_server.data.MenuItemDao
 import com.tobibur.aidl_server.data.MenuItemDatabase
 import com.tobibur.aidl_server.data.MenuItemRepositoryImpl
 import com.tobibur.aidl_server.domain.repository.MenuItemRepository
-import com.tobibur.aidl_server.domain.usecase.AddMenuItemUseCase
+import com.tobibur.aidl_server.domain.usecase.UpdateMenuItemUseCase
 import com.tobibur.aidl_server.domain.usecase.DeleteMenuItemUseCase
+import com.tobibur.aidl_server.domain.usecase.GetMenuItemByIdUseCase
 import com.tobibur.aidl_server.domain.usecase.GetMenuItemsUseCase
 import dagger.Module
 import dagger.Provides
@@ -41,8 +42,14 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providesAddMenuItemUseCase(repository: MenuItemRepository): AddMenuItemUseCase {
-        return AddMenuItemUseCase(repository)
+    fun providesAddMenuItemUseCase(repository: MenuItemRepository): UpdateMenuItemUseCase {
+        return UpdateMenuItemUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesGetMenuItemByIdUseCase(repository: MenuItemRepository): GetMenuItemByIdUseCase {
+        return GetMenuItemByIdUseCase(repository)
     }
 
     @Provides

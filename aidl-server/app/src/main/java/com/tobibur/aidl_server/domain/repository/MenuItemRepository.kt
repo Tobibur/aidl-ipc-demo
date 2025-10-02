@@ -9,5 +9,7 @@ interface MenuItemRepository {
 
     suspend fun insertMenuItem(item: MenuItem)
 
+    suspend fun getMenuItemById(id: Int): MenuItem?
+
     suspend fun deleteMenuItem(item: MenuItem)
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import com.tobibur.aidl_server.data.MenuRepository
 import com.tobibur.aidl_server.domain.model.MenuItem
 import com.tobibur.aidl_server.service.MenuService
@@ -34,6 +35,8 @@ import com.tobibur.aidl_server.ui.theme.AIDLserverTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -42,6 +45,9 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val menuArrayList = ArrayList<MenuItem>()
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -62,6 +68,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     val menuList by mainMenuViewModel.menuItems.collectAsState(initial = emptyList())
+                    menuArrayList.clear()
+                    menuArrayList.addAll(menuList)
 
                     LaunchedEffect(Unit) {
                         delay(1000)
@@ -98,20 +106,16 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        val intent = Intent(this, MenuService::class.java)
-        startService(intent)
-        bindService(intent, object : android.content.ServiceConnection {
-            override fun onServiceConnected(
-                name: android.content.ComponentName?,
-                service: android.os.IBinder?
-            ) {
-                Log.d(TAG, "onServiceConnected: connected")
-            }
-
-            override fun onServiceDisconnected(name: android.content.ComponentName?) {
-                Log.d(TAG, "onServiceDisconnected: disconnected")
-            }
-        }, BIND_AUTO_CREATE)
+        //start the service with and send the initial menu list
+        val serviceIntent = Intent(this, MenuService::class.java)
+        serviceIntent.putParcelableArrayListExtra(
+            "menu_list",
+            menuArrayList
+        )
+        lifecycleScope.launch {
+            delay(2000)
+            startService(serviceIntent)
+        }
     }
 
     companion object {

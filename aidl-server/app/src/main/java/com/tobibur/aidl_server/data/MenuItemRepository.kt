@@ -16,6 +16,10 @@ class MenuItemRepositoryImpl(
         dao.insertMenuItem(item.toEntity())
     }
 
+    override suspend fun getMenuItemById(id: Int): MenuItem? {
+        return dao.getMenuItemById(id)?.toDomain()
+    }
+
     override suspend fun deleteMenuItem(item: MenuItem) {
         dao.deleteMenuItem(item.toEntity())
     }
